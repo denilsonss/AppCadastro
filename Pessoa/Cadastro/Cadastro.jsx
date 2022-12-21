@@ -4,10 +4,13 @@ import { Input, Button } from "@rneui/themed";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { addMethod, AnySchema } from "yup";
+import { useGoToTelaInicial } from "../../Utils/Navegacao";
 
 
 Yup.addMethod(Yup.BaseSchema, "cpf", function validaCpf(message) {
   return this.test("cpf", message, function (cpf) {
+    if(!cpf) return false;
+
     cpf = cpf.replace(/[^\d]+/g, ""); //tira os tracos e pontos
     if (cpf == "") return false;
 
@@ -15,14 +18,14 @@ Yup.addMethod(Yup.BaseSchema, "cpf", function validaCpf(message) {
     if (cpfValoresUnicos.size < 1) return false;
 
     // Valida 1o digito
-    add = 0;
-    for (i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
-    rev = 11 - (add % 11);
+    let add = 0;
+    for (let i = 0; i < 9; i++) add += parseInt(cpf.charAt(i)) * (10 - i);
+    let rev = 11 - (add % 11);
     if (rev == 10 || rev == 11) rev = 0;
     if (rev != parseInt(cpf.charAt(9))) return false;
     // Valida 2o digito
     add = 0;
-    for (i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i);
+    for (let i = 0; i < 10; i++) add += parseInt(cpf.charAt(i)) * (11 - i);
     rev = 11 - (add % 11);
     if (rev == 10 || rev == 11) rev = 0;
     if (rev != parseInt(cpf.charAt(10))) return false;
@@ -60,14 +63,14 @@ export default function Cadastro() {
       cep: "",
     },
     validationSchema: cadastroSchema,
-    onSubmit: salvar,
+    onSubmit: ({ nome, email, cpf, logradouro, numero, complemento, cep }) =>
+    alert(
+      `${nome} ${email} ${cpf} ${logradouro} ${numero} ${complemento} ${cep} `
+    ),
     
   });
 
-  const salvar = ({ nome, email, cpf, logradouro, numero, complemento, cep }) =>
-    alert(
-      `${nome} ${email} ${cpf} ${logradouro} ${numero} ${complemento} ${cep} `
-    );
+  const goToTelaInicial = useGoToTelaInicial();
 
   return (
     <SafeAreaView>
@@ -110,6 +113,7 @@ export default function Cadastro() {
         maxLength={9}
       />
       <Button title="Salvar" onPress={() => alert(handleSubmit())} />
+      <Button title="Voltar" onPress={goToTelaInicial} />
     </SafeAreaView>
   );
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { SafeAreaView, View, FlatList } from "react-native";
 import { ListItem, Button, Input, Sear } from "@rneui/themed";
+import { useGoToTelaInicial } from "../../Utils/Navegacao";
 
 //@rneui/themed
 export default function Busca() {
@@ -16,16 +17,20 @@ export default function Busca() {
 
   const [cpf, setCpf] = React.useState("");
   const [resultadoBusca, setResultadoBusca] = React.useState([]);
-
+  
   const onClickBuscar = () => {
     setResultadoBusca(pessoas.filter((pessoa) => pessoa.cpf.includes(cpf)));
   };
 
+
+    const goToTelaInicial = useGoToTelaInicial();
+    
   return (
     <SafeAreaView>
       <View>
         <Input label="CPF" onChangeText={(value) => setCpf(value)} />
          <Button title="Busca" onPress={onClickBuscar} />
+         <Button title="Voltar" onPress={goToTelaInicial}/>
       </View>
       <View>
         {resultadoBusca.map((pessoa, index) => (
