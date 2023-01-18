@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { addMethod, AnySchema } from "yup";
 import { useGoToTelaInicial } from "../../Utils/Navegacao";
 
+const baseURL =  'https://192.168.0.9:3000/pessoas/POST'
 
 Yup.addMethod(Yup.BaseSchema, "cpf", function validaCpf(message) {
   return this.test("cpf", message, function (cpf) {
@@ -63,10 +64,39 @@ export default function Cadastro() {
       cep: "",
     },
     validationSchema: cadastroSchema,
-    onSubmit: ({ nome, email, cpf, logradouro, numero, complemento, cep }) =>
-    alert(
-      `${nome} ${email} ${cpf} ${logradouro} ${numero} ${complemento} ${cep} `
-    ),
+    onSubmit: ({ nome, email, cpf, logradouro, numero, complemento, cep }) => {
+      
+
+      fetch(baseURL, {
+        method: 'POST',
+        headers: new Headers({
+            Accept: 'aplication/json',
+            'Content-Type': 'aplication/json'
+        }),
+        body: JSON.stringify({  
+        'nome': nome,
+        'cpf': cpf,
+         'email': email,
+        'logradouro': logradouro,
+        'numero': numero,
+        'complemento': complemento,
+        'cep': cep
+        }) 
+    })
+        .then(resposta => 
+            { return alert(resposta.json)
+              
+            })
+            .then(json => {
+              console.log(json)
+              return alert(json);
+            })
+            .catch(err => {
+              console.log(err)
+               return alert(err)});
+              
+/*alert(`${nome},${email}, ${cpf}, ${logradouro}, ${numero}, ${complemento}, ${cep}`);*/
+          }
     
   });
 
@@ -112,8 +142,11 @@ export default function Cadastro() {
         errorMessage={touched.cep && errors.cep}
         maxLength={9}
       />
-      <Button title="Salvar" onPress={() => alert(handleSubmit())} />
+      <Button title="Salvar" onPress={() => handleSubmit()} />
       <Button title="Voltar" onPress={goToTelaInicial} />
     </SafeAreaView>
   );
 }
+
+
+

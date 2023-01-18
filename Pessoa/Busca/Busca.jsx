@@ -20,6 +20,7 @@ export default function Busca() {
   
   const onClickBuscar = () => {
     setResultadoBusca(pessoas.filter((pessoa) => pessoa.cpf.includes(cpf)));
+    alert(cpf);
   };
 
 
