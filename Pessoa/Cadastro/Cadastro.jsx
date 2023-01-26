@@ -1,16 +1,16 @@
 import React from "react";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, ScrollView } from "react-native";
 import { Input, Button } from "@rneui/themed";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { addMethod, AnySchema } from "yup";
 import { useGoToTelaInicial } from "../../Utils/Navegacao";
 
-const baseURL =  'https://192.168.0.9:3000/pessoas/POST'
+import { callApiPessoas } from "../../Utils/api";
 
 Yup.addMethod(Yup.BaseSchema, "cpf", function validaCpf(message) {
   return this.test("cpf", message, function (cpf) {
-    if(!cpf) return false;
+    if (!cpf) return false;
 
     cpf = cpf.replace(/[^\d]+/g, ""); //tira os tracos e pontos
     if (cpf == "") return false;
@@ -38,12 +38,13 @@ export default function Cadastro() {
   const cadastroSchema = Yup.object().shape({
     nome: Yup.string()
       .min(2, "O nome deve ter pelo menos 2 letras")
-      .required("O nome é obrigatorio"),      
+      .required("O nome é obrigatorio"),
     email: Yup.string()
       .email("Email invalido")
       .required("O email é obrigatorio"),
     cpf: Yup.string()
-      .matches(/\d{3}\.\d{3}\.\d{3}\-\d{2}/, "CPF inválido").cpf("CPF inválido")
+      .matches(/\d{3}\.\d{3}\.\d{3}\-\d{2}/, "CPF inválido")
+      .cpf("CPF inválido")
       .required("Cpf é obrigatório"),
     logradouro: Yup.string().required("Logradouro"),
     numero: Yup.string(),
@@ -53,7 +54,7 @@ export default function Cadastro() {
       .required("CEP é obrigatório"),
   });
 
-  const { handleChange, handleSubmit, errors, touched, resetForm } = useFormik({
+  const { handleChange, handleSubmit, errors, touched} = useFormik({
     initialValues: {
       nome: "",
       email: "",
@@ -64,46 +65,48 @@ export default function Cadastro() {
       cep: "",
     },
     validationSchema: cadastroSchema,
-    onSubmit: ({ nome, email, cpf, logradouro, numero, complemento, cep }) => {
-      
-
-      fetch(baseURL, {
-        method: 'POST',
-        headers: new Headers({
-            Accept: 'aplication/json',
-            'Content-Type': 'aplication/json'
-        }),
-        body: JSON.stringify({  
-        'nome': nome,
-        'cpf': cpf,
-         'email': email,
-        'logradouro': logradouro,
-        'numero': numero,
-        'complemento': complemento,
-        'cep': cep
-        }) 
-    })
-        .then(resposta => 
-            { return alert(resposta.json)
-              
-            })
-            .then(json => {
-              console.log(json)
-              return alert(json);
-            })
-            .catch(err => {
-              console.log(err)
-               return alert(err)});
-              
-/*alert(`${nome},${email}, ${cpf}, ${logradouro}, ${numero}, ${complemento}, ${cep}`);*/
-          }
-    
+    onSubmit: (
+      { nome, email, cpf, logradouro, numero, complemento, cep },
+      { resetForm }
+    ) => {
+      callApiPessoas({
+        method: "POST",
+        body: {
+          nome,
+          cpf,
+          email,
+          logradouro,
+          numero,
+          complemento,
+          cep,
+        },
+      })
+        .then(() => {
+          alert(`${nome}Salvo com sucesso!`);
+          resetForm({
+            values: {
+              nome: "",
+              email: "",
+              cpf: "",
+              logradouro: "",
+              numero: "",
+              complemento: "",
+              cep: "",
+            },
+          });
+        })
+        .catch((err) => {
+          alert(err);
+          // alert("Ocorreu um erro, tente novamente mais tarde!");
+          console.error(err);
+        });
+    },
   });
 
   const goToTelaInicial = useGoToTelaInicial();
 
   return (
-    <SafeAreaView>
+    <ScrollView>
       <Input
         label="Nome"
         onChangeText={handleChange("nome")}
@@ -142,11 +145,9 @@ export default function Cadastro() {
         errorMessage={touched.cep && errors.cep}
         maxLength={9}
       />
-      <Button title="Salvar" onPress={() => handleSubmit()} />
-      <Button title="Voltar" onPress={goToTelaInicial} />
-    </SafeAreaView>
+      <Button title="Salvar" onPress={() => handleSubmit()}/>
+
+      <Button title="Voltar" onPress={goToTelaInicial}/>
+    </ScrollView>
   );
 }
-
-
-

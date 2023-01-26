@@ -1,14 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native";
 import { ThemeProvider } from "@rneui/themed";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View, SafeAreaView } from "react-native";
 import { NativeRouter, Route, Routes } from "react-router-native";
 
 import Cadastro from "./Pessoa/Cadastro/Cadastro.screen";
 import TelaInicial from "./TelaInicial/TelaInicial.screen";
 import Busca from "./Pessoa/Busca/Busca.screen";
-
-import api from './src/services/Api';
 
 export default function App() {
   return (
