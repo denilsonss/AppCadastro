@@ -7,13 +7,20 @@ import { callApiPessoas } from "../../Utils/api";
 
 //@rneui/themed
 export default function Busca() {
-  
   const [cpf, setCpf] = React.useState("");
+  const [nome, setNome] = React.useState("");
   const [resultadoBusca, setResultadoBusca] = React.useState([]);
 
   const onClickBuscar = () => {
+    const params = { cpf, nome };
+
     callApiPessoas({
-      path: `/${cpf}`
+      path:
+        "?" +
+        Object.keys(params)
+          .filter((key) => params[key])
+          .map((key) => `${key}=${encodeURIComponent(params[key])}`)
+          .join("&"),
     })
       .then((values) => setResultadoBusca(values))
       .catch((err) =>
@@ -51,16 +58,25 @@ export default function Busca() {
   return (
     <ScrollView>
       <View>
-        <Input label="CPF" onChangeText={(value) => setCpf(value)}/>
-        <Button title="Busca" onPress={onClickBuscar} disabled={cpf === '' || cpf == null}/>
-        <Button title="Voltar" onPress={goToTelaInicial}/>
+        <Input label="CPF" onChangeText={(value) => setCpf(value)} />
+        <Text style={{ textAlign: "center" }}> OU </Text>
+        <Input label="Nome" onChangeText={(value) => setNome(value)} />
+
+        <Button
+          title="Busca"
+          onPress={onClickBuscar}
+          disabled={
+            (cpf === "" || cpf == null) && (nome === "" || nome === null)
+          }
+        />
+        <Button title="Voltar" onPress={goToTelaInicial} />
       </View>
       <View>
         {resultadoBusca.map((pessoa, index) => (
           <ListItem>
             <ListItem.Content key={index}>
               <ListItem.Title>{`${pessoa.nome}`}</ListItem.Title>
-              <Text>{`Email: ${pessoa.email}` }</Text>
+              <Text>{`Email: ${pessoa.email}`}</Text>
               <Text>{`CPF: ${pessoa.cpf}`}</Text>
               <Text>{`Logradouro: ${pessoa.logradouro}, ${pessoa.numero} - CEP: ${pessoa.cep}`}</Text>
             </ListItem.Content>

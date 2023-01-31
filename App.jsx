@@ -7,6 +7,7 @@ import Cadastro from "./Pessoa/Cadastro/Cadastro.screen";
 import TelaInicial from "./TelaInicial/TelaInicial.screen";
 import Busca from "./Pessoa/Busca/Busca.screen";
 
+
 export default function App() {
   return (
     <NativeRouter>
@@ -17,7 +18,7 @@ export default function App() {
             <Route path="/cadastro" element={<Cadastro />} />
             <Route path="/busca" element={<Busca />} />
           </Routes>
-          <StatusBar style="auto" />
+          <StatusBar style="auto"/>
         </SafeAreaView>
       </ThemeProvider>
     </NativeRouter>

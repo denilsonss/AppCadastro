@@ -1,4 +1,4 @@
-const BASE_API_URL = "https://1159-2804-14c-26-833e-5dcf-951e-392f-3ee2.sa.ngrok.io";
+const BASE_API_URL = "https://f7dd-2804-14c-26-833e-cc74-551b-1ae3-def3.sa.ngrok.io";
 
 export function callApi({
     path = '',

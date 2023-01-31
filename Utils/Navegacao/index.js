@@ -28,6 +28,8 @@ function useGoToTelaInicial() {
   };
 }
 
+
+
 export {
   useGoToBusca,
   useGoToCadastro,
