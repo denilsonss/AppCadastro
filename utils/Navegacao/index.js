@@ -1,14 +1,12 @@
 //hooks
 //sao funcionalidades que ajudam a programar
-import {
-  useNavigate
-} from "react-router-native";
+import { useNavigate } from "react-router-native";
 
 function useGoToCadastro() {
   const navigate = useNavigate();
 
   return () => {
-    navigate('/cadastro');
+    navigate("/cadastro");
   };
 }
 
@@ -16,7 +14,7 @@ function useGoToBusca() {
   const navigate = useNavigate();
 
   return () => {
-    navigate('/busca');
+    navigate("/busca");
   };
 }
 
@@ -24,14 +22,8 @@ function useGoToTelaInicial() {
   const navigate = useNavigate();
 
   return () => {
-    navigate('/');
+    navigate("/");
   };
 }
 
-
-
-export {
-  useGoToBusca,
-  useGoToCadastro,
-  useGoToTelaInicial
-}
+export { useGoToBusca, useGoToCadastro, useGoToTelaInicial };

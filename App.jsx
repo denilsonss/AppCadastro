@@ -1,12 +1,10 @@
-import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from "@rneui/themed";
-import { StyleSheet, View, SafeAreaView } from "react-native";
+import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { NativeRouter, Route, Routes } from "react-router-native";
 
 import Cadastro from "./Pessoa/Cadastro/Cadastro.screen";
 import TelaInicial from "./TelaInicial/TelaInicial.screen";
 import Busca from "./Pessoa/Busca/Busca.screen";
-
 
 export default function App() {
   return (
@@ -18,20 +16,16 @@ export default function App() {
             <Route path="/cadastro" element={<Cadastro />} />
             <Route path="/busca" element={<Busca />} />
           </Routes>
-          <StatusBar style="auto"/>
+          <StatusBar style="auto" />
         </SafeAreaView>
       </ThemeProvider>
     </NativeRouter>
   );
 }
 
-//Utils
-//Navegacao
-//index.js
-
-
 const style = StyleSheet.create({
   container: {
     padding: 16,
+    marginTop: StatusBar.currentHeight,
   },
 });

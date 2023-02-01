@@ -1,7 +1,7 @@
 import Busca from "./Busca";
 
 function BuscaScreen() {
-  return <Busca/>
+  return <Busca />;
 }
 
 export default BuscaScreen;

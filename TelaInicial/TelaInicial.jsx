@@ -2,7 +2,7 @@ import React from "react";
 import { SafeAreaView } from "react-native";
 import { Button } from "@rneui/themed";
 
-import { useGoToBusca, useGoToCadastro } from "../Utils/Navegacao";
+import { useGoToBusca, useGoToCadastro } from "../utils/Navegacao";
 
 export default function TelaInicial() {
   const goToCadastro = useGoToCadastro();

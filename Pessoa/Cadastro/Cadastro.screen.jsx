@@ -1,7 +1,7 @@
 import Cadastro from "./Cadastro";
 
 function CadastroScreen() {
-  return <Cadastro/>
+  return <Cadastro />;
 }
 
 export default CadastroScreen;

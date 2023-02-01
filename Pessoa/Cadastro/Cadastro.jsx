@@ -1,14 +1,13 @@
 import React from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { Input, Button } from "@rneui/themed";
-import { useFormik, Masked } from "formik";
+import { useFormik } from "formik";
+import { mask } from "react-native-mask-text";
 import * as Yup from "yup";
-import { addMethod, AnySchema } from "yup";
-import { useGoToCadastroTeste, useGoToTelaInicial } from "../../Utils/Navegacao";
-import {TextInputMask} from 'react-native-masked-text';
-import { callApiPessoas } from "../../Utils/api";
-import MaskedInput from "react-text-mask";
 
+import { useGoToTelaInicial } from "../../utils/Navegacao";
+import { callApiPessoas } from "../../utils/api";
+import { CEP_MASK, CPF_MASK } from "../../utils/masks";
 
 Yup.addMethod(Yup.BaseSchema, "cpf", function validaCpf(message) {
   return this.test("cpf", message, function (cpf) {
@@ -36,8 +35,13 @@ Yup.addMethod(Yup.BaseSchema, "cpf", function validaCpf(message) {
   });
 });
 
+const style = StyleSheet.create({
+  form: {
+    marginBottom: 16,
+  },
+});
+
 export default function Cadastro() {
-  const [cpf,setCpf] = React.useState(null)
   const cadastroSchema = Yup.object().shape({
     nome: Yup.string()
       .min(2, "O nome deve ter pelo menos 2 letras")
@@ -57,7 +61,15 @@ export default function Cadastro() {
       .required("CEP é obrigatório"),
   });
 
-  const { handleChange, handleSubmit, resetForm, errors, touched } = useFormik({
+  const {
+    handleChange,
+    handleSubmit,
+    setFieldValue,
+    values,
+    handleReset,
+    errors,
+    touched,
+  } = useFormik({
     initialValues: {
       nome: "",
       email: "",
@@ -68,10 +80,7 @@ export default function Cadastro() {
       cep: "",
     },
     validationSchema: cadastroSchema,
-    onSubmit: (
-      { nome, email, cpf, logradouro, numero, complemento, cep },
-      { resetForm }
-    ) => {
+    onSubmit: ({ nome, email, cpf, logradouro, numero, complemento, cep }) => {
       callApiPessoas({
         method: "POST",
         body: {
@@ -85,12 +94,11 @@ export default function Cadastro() {
         },
       })
         .then(() => {
-          alert(`${nome}Salvo com sucesso!`);
+          alert(`${nome} salvo com sucesso!`);
+          handleReset();
         })
-        .catch((err) => {
-          alert(err);
-          // alert("Ocorreu um erro, tente novamente mais tarde!");
-          console.error(err);
+        .catch(() => {
+          alert("Ocorreu um erro, tente novamente mais tarde!");
         });
     },
   });
@@ -98,55 +106,72 @@ export default function Cadastro() {
   const goToTelaInicial = useGoToTelaInicial();
   return (
     <ScrollView>
-      <Input
-        label="Nome"
-        placeholder="Nome"
-        onChangeText={handleChange("nome")}
-        errorMessage={touched.nome && errors.nome}
-        resetForm
-      />
-      <Input
-        placeholder="Email"
-        label="Email"
-        onChangeText={handleChange("email")}
-        errorMessage={touched.email && errors.email}
-        keyboardType="email-address"
-      />
+      <View style={style.form}>
+        <Input
+          label="Nome"
+          placeholder="Nome"
+          value={values.nome}
+          onChangeText={handleChange("nome")}
+          errorMessage={touched.nome && errors.nome}
+        />
 
-      <Input
-        label ="CPF"
-       
-        onChangeText={handleChange("cpf")}
-        errorMessage={touched.cpf && errors.cpf}
-        maxLength={14}
-      />
-      
-      <Input
-        label="Logradouro"
-        onChangeText={handleChange("logradouro")}
-        errorMessage={touched.logradouro && errors.logradouro}
-      />
-      <Input
-        label="Numero"
-        onChangeText={handleChange("numero")}
-        errorMessage={touched.numero && errors.numero}
-      />
-      <Input
-        label="Complemento"
-        onChangeText={handleChange("complemento")}
-        errorMessage={touched.complemento && errors.complemento}
-      />
-      <Input
-        label="CEP"
-        onChangeText={handleChange("cep")}
-        errorMessage={touched.cep && errors.cep}
-        maxLength={9}
-      />
-      <Button title="Salvar" 
-      onPress={() => handleSubmit()}
-      />
-      <Button title="Voltar" onPress={goToTelaInicial}/>
+        <Input
+          placeholder="Email"
+          label="Email"
+          value={values.email}
+          onChangeText={handleChange("email")}
+          errorMessage={touched.email && errors.email}
+          keyboardType="email-address"
+        />
+
+        <Input
+          label="CPF"
+          value={values.cpf}
+          onChangeText={(value) => {
+            const maskedValue = mask(value, CPF_MASK);
+            setFieldValue("cpf", maskedValue);
+          }}
+          errorMessage={touched.cpf && errors.cpf}
+          maxLength={14}
+          keyboardType="number-pad"
+        />
+
+        <Input
+          label="Logradouro"
+          value={values.logradouro}
+          onChangeText={handleChange("logradouro")}
+          errorMessage={touched.logradouro && errors.logradouro}
+        />
+
+        <Input
+          label="Numero"
+          value={values.numero}
+          onChangeText={handleChange("numero")}
+          errorMessage={touched.numero && errors.numero}
+        />
+
+        <Input
+          label="Complemento"
+          value={values.complemento}
+          onChangeText={handleChange("complemento")}
+          errorMessage={touched.complemento && errors.complemento}
+        />
+
+        <Input
+          label="CEP"
+          value={values.cep}
+          onChangeText={(value) => {
+            const maskedValue = mask(value, CEP_MASK);
+            setFieldValue("cep", maskedValue);
+          }}
+          errorMessage={touched.cep && errors.cep}
+          maxLength={9}
+          keyboardType="number-pad"
+        />
+      </View>
+
+      <Button title="Salvar" onPress={handleSubmit} />
+      <Button title="Voltar" onPress={goToTelaInicial} />
     </ScrollView>
   );
 }
-
