@@ -54,7 +54,8 @@ export default function Cadastro() {
       .cpf("CPF inválido")
       .required("Cpf é obrigatório"),
     logradouro: Yup.string().required("Logradouro"),
-    numero: Yup.string(),
+    numero: Yup.string()
+        .required("Número é obrigatório"),
     complemento: Yup.string(),
     cep: Yup.string()
       .matches(/\d{5}\-\d{3}/, "CEP é invalido")
@@ -97,8 +98,8 @@ export default function Cadastro() {
           alert(`${nome} salvo com sucesso!`);
           handleReset();
         })
-        .catch(() => {
-          alert("Ocorreu um erro, tente novamente mais tarde!");
+        .catch((errorMessage) => {
+          alert("Ocorreu um erro, tente novamente mais tarde! " + errorMessage);
         });
     },
   });

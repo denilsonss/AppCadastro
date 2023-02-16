@@ -1,5 +1,5 @@
 const BASE_API_URL =
-  "https://b71d-2003-cd-ef1c-c400-aeec-4a0c-947b-fba2.eu.ngrok.io";
+  "https://b050-2804-14c-26-833e-f906-bc21-3359-44ef.sa.ngrok.io";
 
 export function callApi(
   { path = "", method, body } = {
