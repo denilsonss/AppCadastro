@@ -1,5 +1,5 @@
 const BASE_API_URL =
-  "https://b050-2804-14c-26-833e-f906-bc21-3359-44ef.sa.ngrok.io";
+  "https://f446-2804-14c-26-833e-90f2-4baa-a27-3f22.sa.ngrok.io";
 
 export function callApi(
   { path = "", method, body } = {
@@ -8,6 +8,7 @@ export function callApi(
     body: null,
   }
 ) {
+  console.log(`${BASE_API_URL}/${path}`);
   return fetch(`${BASE_API_URL}/${path}`, {
     method,
     headers: new Headers({

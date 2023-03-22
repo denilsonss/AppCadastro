@@ -24,7 +24,7 @@ export default function Busca() {
           .join("&"),
     })
       .then((values) => setResultadoBusca(values))
-      .catch(() =>
+      .catch((e) =>
         alert("Nao foi possivel buscar pessoas. Tente novamente mais tarde!")
       );
   };
